@@ -3,6 +3,7 @@ import 'package:firebase_flutterbloc/fetures/authen/sign_in_bloc/sign_in_event.d
 import 'package:firebase_flutterbloc/fetures/product/bloc/product_bloc.dart';
 import 'package:firebase_flutterbloc/fetures/product/bloc/product_event.dart';
 import 'package:firebase_flutterbloc/fetures/product/bloc/product_state.dart';
+import 'package:firebase_flutterbloc/fetures/product/screen/add_product.dart';
 import 'package:firebase_flutterbloc/fetures/product/screen/update_product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,10 +63,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(onPressed: () {}, icon: Icon(Icons.add)),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.remove)),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          context.read<ProductBloc>().add(
+                            IncrementQuantity(product.id.toString()),
+                          );
+                        },
+                        icon: Icon(Icons.add),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          context.read<ProductBloc>().add(
+                            DecrementQuantity(product.id.toString()),
+                          );
+                        },
+                        icon: Icon(Icons.remove),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          context.read<ProductBloc>().add(
+                            DeleteProduct(product.id.toString()),
+                          );
+                        },
                         icon: Icon(Icons.delete_forever_rounded),
                       ),
                     ],
@@ -76,6 +95,14 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           return const Center(child: Text('No Products Available'));
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => AddProductScreen()));
+        },
+        child: Icon(Icons.add),
       ),
     );
   }

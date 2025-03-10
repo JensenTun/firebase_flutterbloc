@@ -4,65 +4,49 @@ import 'package:firebase_flutterbloc/fetures/product/model/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class UpdateProductScreen extends StatefulWidget {
-  final ProductModel productModel;
-  const UpdateProductScreen({super.key, required this.productModel});
+class AddProductScreen extends StatefulWidget {
+  const AddProductScreen({super.key});
 
   @override
-  State<UpdateProductScreen> createState() => _UpdateProductScreenState();
+  State<AddProductScreen> createState() => _AddProductScreenState();
 }
 
-class _UpdateProductScreenState extends State<UpdateProductScreen> {
-  final _formKey = GlobalKey<FormState>();
-  late TextEditingController _nameController;
-  late TextEditingController _priceController;
-  late TextEditingController _quantityController;
+class _AddProductScreenState extends State<AddProductScreen> {
+  final _formkey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _quantityController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _nameController = TextEditingController(text: widget.productModel.product);
-    _priceController = TextEditingController(
-      text: widget.productModel.price.toString(),
-    );
-    _quantityController = TextEditingController(
-      text: widget.productModel.quantity.toString(),
-    );
-  }
-
-  void _updateProduct() {
-    if (_formKey.currentState!.validate()) {
-      final updatedProduct = ProductModel(
-        id: widget.productModel.id,
+  //
+  void _submitProduct() {
+    if (_formkey.currentState!.validate()) {
+      final product = ProductModel(
         product: _nameController.text,
         price: double.parse(_priceController.text),
         quantity: int.parse(_quantityController.text),
       );
-
-      // Dispatch UpdateProduct Event
-      context.read<ProductBloc>().add(UpdateProduct(updatedProduct));
-
+      context.read<ProductBloc>().add(AddProduct(product));
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Product Updated Successfully!')),
+        const SnackBar(content: Text('Product Added Successfully!')),
       );
-
-      Navigator.pop(context); // Go back to the previous screen
     }
+    Navigator.pop(context);
   }
 
+  //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Update Product')),
+      appBar: AppBar(title: const Text('Add Product')),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,
+          key: _formkey,
           child: Column(
             children: [
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Product Name'),
+                decoration: InputDecoration(labelText: 'Product Name'),
                 validator:
                     (value) =>
                         value!.isEmpty ? 'Please enter a product name' : null,
@@ -84,8 +68,8 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _updateProduct,
-                child: const Text('Update Product'),
+                onPressed: _submitProduct,
+                child: Text('Add product'),
               ),
             ],
           ),
