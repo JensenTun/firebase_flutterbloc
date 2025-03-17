@@ -3,6 +3,13 @@ allprojects {
         google()
         mavenCentral()
     }
+    buildscript {
+         dependencies {
+                classpath("com.android.tools.build:gradle:8.1.2") // Ensure the latest version
+                classpath("com.google.gms:google-services:4.4.0") // Firebase
+    }
+}
+
 }
 
 val newBuildDir: Directory = rootProject.layout.buildDirectory.dir("../../build").get()
@@ -19,3 +26,4 @@ subprojects {
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
+
